@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:momowrapped/screens/wrapped.dart';
+import 'package:momowrapped/screens/intro_slides.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -360,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen>
               // Navigate to the WrappedStory screen
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => WrappedStory()),
+                MaterialPageRoute(builder: (context) => IntroSlides()),
               );
             },
             shape: CircleBorder(),

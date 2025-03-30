@@ -2,14 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class WrappedStory extends StatefulWidget {
-  const WrappedStory({super.key});
+class MonthlyWrapped extends StatefulWidget {
+  const MonthlyWrapped({super.key});
 
   @override
   _WrappedStoryState createState() => _WrappedStoryState();
 }
 
-class _WrappedStoryState extends State<WrappedStory>
+class _WrappedStoryState extends State<MonthlyWrapped>
     with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
@@ -31,7 +31,7 @@ class _WrappedStoryState extends State<WrappedStory>
     {
       "title": "Top Recipient",
       "value": "John Doe - ₵2,500",
-      "color": Colors.yellow[500]
+      "color": Colors.yellow[500],
     },
     {
       "title": "Most Used Service",
@@ -39,13 +39,13 @@ class _WrappedStoryState extends State<WrappedStory>
       "color": Colors.yellow[400]
     },
     {
-      "title": "Peak Spending Month",
-      "value": "October",
+      "title": "Peak Spending week",
+      "value": "2nd Week",
       "color": Colors.yellow[500]
     },
     {
-      "title": "Your 2024 Wrapped!",
-      "value": "See you next year!",
+      "title": "Your October Wrapped!",
+      "value": "See you next month!",
       "color": Colors.yellow[600],
       "isLast": true
     },
@@ -153,7 +153,7 @@ class _WrappedStoryState extends State<WrappedStory>
             Navigator.pop(context); // Go back to the landing page
           },
         ),
-        title: Text("Wrapped Story", style: TextStyle(color: Colors.white)),
+        
       ),
       backgroundColor: Colors.black,
       body: GestureDetector(
@@ -190,7 +190,7 @@ class _WrappedStoryState extends State<WrappedStory>
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: AssetImage(
-                                  'assets/images/iPhone 16 Pro Max - 1 (1).png'),
+                                  'assets/images/anualbackground.png'),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -278,58 +278,6 @@ class _WrappedStoryState extends State<WrappedStory>
                           ),
                         ),
                         // Animated corners
-                        AnimatedPositioned(
-                          duration: Duration(milliseconds: 800),
-                          top: index == _currentIndex ? 10 : 0,
-                          left: index == _currentIndex ? 10 : 0,
-                          child: Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        AnimatedPositioned(
-                          duration: Duration(milliseconds: 800),
-                          top: index == _currentIndex ? 10 : 0,
-                          right: index == _currentIndex ? 10 : 0,
-                          child: Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        AnimatedPositioned(
-                          duration: Duration(milliseconds: 800),
-                          bottom: index == _currentIndex ? 10 : 0,
-                          left: index == _currentIndex ? 10 : 0,
-                          child: Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        AnimatedPositioned(
-                          duration: Duration(milliseconds: 800),
-                          bottom: index == _currentIndex ? 10 : 0,
-                          right: index == _currentIndex ? 10 : 0,
-                          child: Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: Colors.yellow,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
                       ],
                     );
                   },

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:momowrapped/screens/landing.dart';
-import 'package:momowrapped/screens/wrapped.dart';
 
 void main() {
   runApp(MyApp());
