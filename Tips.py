@@ -1,3 +1,4 @@
+import json
 import os
 
 import google.generativeai as genai
@@ -44,10 +45,11 @@ def get_savings_tips(income, savings_goal, spending_data):
     try:
         response = model.generate_content(user_prompt)
         if response and hasattr(response, "text"):
-            return response.text.strip()
-        return "No response received."
+            tip_text = response.text.strip()
+            return {"tip": tip_text}
+        return {"tip": "No response received"}
     except Exception as e:
-        return f"Error: {e}"
+        return {"tip": f"Error: {str(e)}"}
 
 
 if __name__ == "__main__":
@@ -55,4 +57,4 @@ if __name__ == "__main__":
     spending_data = {"Food": 300, "Transport": 700, "Airtime/Data": 500}
     savings_goals = 200
     tip = get_savings_tips(income, savings_goals, spending_data)
-    print(tip)
+    print(json.dumps(tip, indent=2, ensure_ascii=False))
