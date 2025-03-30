@@ -1,0 +1,254 @@
+openapi: 3.0.3
+info:
+  title: Fin-Wrapped API
+  description: |
+    Fin-Wrapped provides personalized financial insights from transaction data, inspired by Spotify Wrapped.
+    This API generates a "MoMo Wrapped" summary for users, integrating with mobile money platforms like MoMo.
+    Currently demoed for Dominic (phone: 233534669344) using data from March 17-23, 2025.
+
+    **Note**: Built on Firebase Spark plan for the hackathon; no HTTP Cloud Functions deployed due to Blaze plan requirement.
+    The Flutter client queries Firestore directly and processes data locally. This spec assumes a Blaze plan deployment.
+  version: 1.0.0
+  contact:
+    name: Fin-Wrapped Team
+    email: support@finwrapped.com
+
+servers:
+  - url: https://us-central1-fin-wrapped.cloudfunctions.net
+    description: Production server (Blaze plan required)
+  - url: http://localhost:5001/fin-wrapped/us-central1
+    description: Local Firebase Emulator (Spark plan demo)
+
+paths:
+  /getMoMoWrapped:
+    get:
+      summary: Get MoMo Wrapped Summary
+      description: Retrieves a user's financial summary, including spending, income, transactions, subscriptions, and health insights.
+      operationId: getMoMoWrapped
+      parameters:
+        - name: userPhone
+          in: query
+          description: User's phone number (e.g., Dominic’s MoMo ID).
+          required: false
+          schema:
+            type: string
+            default: "233534669344"
+        - name: startDate
+          in: query
+          description: Start date of the period (ISO 8601, YYYY-MM-DD).
+          required: false
+          schema:
+            type: string
+            format: date
+            default: "2025-03-17"
+        - name: endDate
+          in: query
+          description: End date of the period (ISO 8601, YYYY-MM-DD).
+          required: false
+          schema:
+            type: string
+            format: date
+            default: "2025-03-23"
+      responses:
+        '200':
+          description: Successful response with Wrapped summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WrappedResponse'
+              example:
+                spending_insights:
+                  tagline: "Your Pocket Don Travel Pass Accra! 🚀"
+                  total_spent: 119.24
+                  categories:
+                    personal: 91.24
+                    bills: 62.0
+                    transfers: 28.0
+                  ai_insight: "You’re spending smart!"
+                income_summary:
+                  tagline: "Money Dey Flow Like River!"
+                  total_received: 150.5
+                  sources:
+                    "Ecobank MobileApp": 100.0
+                    "Christopher Mensah": 50.5
+                  ai_tip: "Save 10% this month!"
+                top_transactions:
+                  biggest_transaction: 50.0
+                  most_sent_to: "Gorden Gyamfi Amoah"
+                  most_sent_amount: 18.0
+                  tagline: "You Feed Them Pass Your Own Stomach! 🍽️"
+                  ai_insight: "Transfers look balanced."
+                subscriptions:
+                  tagline: "No Subscription Stress!"
+                  total_spent: 12.0
+                  count: 1
+                  ai_alert: "All good here."
+                financial_health:
+                  score: 63
+                  recommendation: "Keep up the good work!"
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Invalid date format for startDate or endDate"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Firestore query failed: [details]"
+
+components:
+  schemas:
+    WrappedResponse:
+      type: object
+      properties:
+        spending_insights:
+          $ref: '#/components/schemas/SpendingInsights'
+        income_summary:
+          $ref: '#/components/schemas/IncomeSummary'
+        top_transactions:
+          $ref: '#/components/schemas/TopTransactions'
+        subscriptions:
+          $ref: '#/components/schemas/Subscriptions'
+        financial_health:
+          $ref: '#/components/schemas/FinancialHealth'
+      required:
+        - spending_insights
+        - income_summary
+        - top_transactions
+        - subscriptions
+        - financial_health
+
+    SpendingInsights:
+      type: object
+      properties:
+        tagline:
+          type: string
+          description: Witty spending summary
+        total_spent:
+          type: number
+          format: float
+          description: Total amount spent in GHS
+        categories:
+          type: object
+          properties:
+            personal:
+              type: number
+              format: float
+            bills:
+              type: number
+              format: float
+            transfers:
+              type: number
+              format: float
+          description: Breakdown of spending by category
+        ai_insight:
+          type: string
+          description: AI-generated spending tip
+      required:
+        - tagline
+        - total_spent
+        - categories
+        - ai_insight
+
+    IncomeSummary:
+      type: object
+      properties:
+        tagline:
+          type: string
+          description: Witty income summary
+        total_received:
+          type: number
+          format: float
+          description: Total amount received in GHS
+        sources:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+          description: Income sources and amounts
+        ai_tip:
+          type: string
+          description: AI-generated income tip
+      required:
+        - tagline
+        - total_received
+        - sources
+        - ai_tip
+
+    TopTransactions:
+      type: object
+      properties:
+        biggest_transaction:
+          type: number
+          format: float
+          description: Largest outgoing transaction in GHS
+        most_sent_to:
+          type: string
+          description: Name of the most frequent recipient
+        most_sent_amount:
+          type: number
+          format: float
+          description: Total amount sent to the top recipient
+        tagline:
+          type: string
+          description: Witty transaction summary
+        ai_insight:
+          type: string
+          description: AI-generated transaction tip
+      required:
+        - biggest_transaction
+        - most_sent_to
+        - most_sent_amount
+        - tagline
+        - ai_insight
+
+    Subscriptions:
+      type: object
+      properties:
+        tagline:
+          type: string
+          description: Witty subscription summary
+        total_spent:
+          type: number
+          format: float
+          description: Total spent on subscriptions in GHS
+        count:
+          type: integer
+          description: Number of subscription transactions
+        ai_alert:
+          type: string
+          description: AI-generated subscription alert
+      required:
+        - tagline
+        - total_spent
+        - count
+        - ai_alert
+
+    FinancialHealth:
+      type: object
+      properties:
+        score:
+          type: integer
+          description: Financial health score (0-100)
+        recommendation:
+          type: string
+          description: AI-generated financial advice
+      required:
+        - score
+        - recommendation
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+      required:
+        - error
